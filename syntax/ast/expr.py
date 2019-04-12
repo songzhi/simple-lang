@@ -32,8 +32,8 @@ class UnaryOpExpr(Expr):
         return f'{self.op} {self.expr}'
 
 
-class Number(Expr):
-    def __init__(self, value: float):
+class ConstExpr(Expr):
+    def __init__(self, value):
         self.value = value
 
     def __repr__(self):
@@ -45,6 +45,22 @@ class Number(Expr):
     @property
     def is_reducible(self) -> bool:
         return False
+
+
+class Number(ConstExpr):
+    pass
+
+
+class Int(ConstExpr):
+    pass
+
+
+class String(ConstExpr):
+    pass
+
+
+class Bool(ConstExpr):
+    pass
 
 
 class Add(BinOpExpr):
