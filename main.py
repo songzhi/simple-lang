@@ -2,7 +2,8 @@ from syntax.ast import *
 from vm import VirtualMachine
 
 if __name__ == "__main__":
-    expr = Assign(Var('x'),Add(Mul(Num(1), Num(2)), Mul(Num(3), Num(4))))
-    vm = VirtualMachine(expr, {})
+    expr = If(Var('x'), Assign(Var('y'), Int(1)), Assign(Var('y'), Int(2)))
+    env = {'x': Bool(True)}
+    vm = VirtualMachine(expr, env)
 
     vm.run()

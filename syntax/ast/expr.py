@@ -60,6 +60,9 @@ class ConstExpr(Expr):
     def is_reducible(self) -> bool:
         return False
 
+    def __eq__(self, other):
+        return type(self) is type(other) and self.value == other.value
+
 
 class Num(ConstExpr):
     pass
@@ -79,7 +82,6 @@ class Bool(ConstExpr):
 
 class Add(BinOpExpr):
     op = '+'
-
     @staticmethod
     def reduce_operation(x, y, env):
         return Num(x+y), env
@@ -87,7 +89,6 @@ class Add(BinOpExpr):
 
 class Sub(BinOpExpr):
     op = '-'
-
     @staticmethod
     def reduce_operation(x, y, env):
         return Num(x-y), env
@@ -95,7 +96,6 @@ class Sub(BinOpExpr):
 
 class Mul(BinOpExpr):
     op = '*'
-
     @staticmethod
     def reduce_operation(x, y, env):
         return Num(x*y), env
@@ -128,6 +128,12 @@ class Assign(BinOpExpr):
     def reduce_operation(name, value, env):
         return Nothing(), {**env, name: value}
 
+    def reduce(self, env: dict) -> Expr:
+        if self.right.is_reducible:
+            right, env = self.right.reduce(env)
+            return type(self)(self.left, right), env
+        else:
+            return self.reduce_operation(self.left.value, self.right.value, env)
 
 class Var(Expr):
     def __init__(self, name):
@@ -141,10 +147,7 @@ class Var(Expr):
 
     def reduce(self, env: dict):
         return env.get(self.value), env
-    
-    @property
-    def is_reducible(self) -> bool:
-        return False
+
 
 
 class Nothing(Expr):
@@ -161,3 +164,25 @@ class Nothing(Expr):
 
     def __eq__(self, other):
         return type(self) is type(other)
+
+
+class If(Expr):
+    def __init__(self, condition: Expr, consequence: Expr, alternative: Expr):
+        self.condition = condition
+        self.consequence = consequence
+        self.alternative = alternative
+
+    def __str__(self):
+        return f'if ({self.condition}) {{ {self.consequence} }} else {{ {self.alternative} }}'
+
+    def __repr__(self):
+        return f'If({self.condition}, {self.consequence}, {self.alternative})'
+
+    def reduce(self, env: dict):
+        if self.condition.is_reducible:
+            condition, env = self.condition.reduce(env)
+            return If(condition, self.consequence, self.alternative), env
+        elif self.condition == Bool(True):
+            return self.consequence, env
+        else:
+            return self.alternative, env

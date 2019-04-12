@@ -11,6 +11,6 @@ class VirtualMachine:
 
     def run(self):
         while self.expr.is_reducible:
-            print(self.expr)
+            print(self.expr, ', ', self.env)
             self.step()
-        print(self.expr)
+        print(self.expr, ', ', self.env)
