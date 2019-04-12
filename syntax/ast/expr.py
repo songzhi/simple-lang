@@ -3,7 +3,7 @@ class Expr:
     def is_reducible(self) -> bool:
         return True
 
-    def reduce(self):
+    def reduce(self, env: dict = None):
         return self
 
 
@@ -24,7 +24,7 @@ class BinOpExpr(Expr):
     def reduce_operation(x, y):
         pass
 
-    def reduce(self) -> Expr:
+    def reduce(self, env: dict = None) -> Expr:
         if self.left.is_reducible:
             return type(self)(self.left.reduce(), self.right)
         elif self.right.is_reducible:
@@ -49,7 +49,7 @@ class ConstExpr(Expr):
         self.value = value
 
     def __repr__(self):
-        return f'{self.__class__.__name__}({self.value})'
+        return f'{type(self).__name__}({self.value})'
 
     def __str__(self):
         return f'{self.value}'
@@ -118,3 +118,17 @@ class GreaterThan(BinOpExpr):
     @staticmethod
     def reduce_operation(x, y):
         return Bool(x > y)
+
+
+class Var(Expr):
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return f'{type(self).__name__}({self.name})'
+
+    def __str__(self):
+        return f'{self.name}'
+
+    def reduce(self, env: dict):
+        return env.get(self.name)
