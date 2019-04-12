@@ -3,8 +3,8 @@ class Expr:
     def is_reducible(self) -> bool:
         return True
 
-    def reduce(self, env: dict = None):
-        return self
+    def reduce(self, env: dict):
+        return self, env
 
 
 class BinOpExpr(Expr):
@@ -21,16 +21,18 @@ class BinOpExpr(Expr):
         return f'{self.left} {self.op} {self.right}'
 
     @staticmethod
-    def reduce_operation(x, y):
-        pass
+    def reduce_operation(x, y, env: dict):
+        return self, env
 
-    def reduce(self, env: dict = None) -> Expr:
+    def reduce(self, env: dict) -> Expr:
         if self.left.is_reducible:
-            return type(self)(self.left.reduce(), self.right)
+            left, env = self.left.reduce(env)
+            return type(self)(left, self.right), env
         elif self.right.is_reducible:
-            return type(self)(self.left, self.right.reduce())
+            right, env = self.right.reduce(env)
+            return type(self)(self.left, right), env
         else:
-            return self.reduce_operation(self.left.value, self.right.value)
+            return self.reduce_operation(self.left.value, self.right.value, env)
 
 
 class UnaryOpExpr(Expr):
@@ -79,45 +81,45 @@ class Add(BinOpExpr):
     op = '+'
 
     @staticmethod
-    def reduce_operation(x, y):
-        return Num(x+y)
+    def reduce_operation(x, y, env):
+        return Num(x+y), env
 
 
 class Sub(BinOpExpr):
     op = '-'
 
     @staticmethod
-    def reduce_operation(x, y):
-        return Num(x-y)
+    def reduce_operation(x, y, env):
+        return Num(x-y), env
 
 
 class Mul(BinOpExpr):
     op = '*'
 
     @staticmethod
-    def reduce_operation(x, y):
-        return Num(x*y)
+    def reduce_operation(x, y, env):
+        return Num(x*y), env
 
 
 class Div(BinOpExpr):
     op = '/'
     @staticmethod
-    def reduce_operation(x, y):
-        return Num(x/y)
+    def reduce_operation(x, y, env):
+        return Num(x/y), env
 
 
 class LessThan(BinOpExpr):
     op = '<'
     @staticmethod
-    def reduce_operation(x, y):
-        return Bool(x < y)
+    def reduce_operation(x, y, env):
+        return Bool(x < y), env
 
 
 class GreaterThan(BinOpExpr):
     op = '>'
     @staticmethod
-    def reduce_operation(x, y):
-        return Bool(x > y)
+    def reduce_operation(x, y, env):
+        return Bool(x > y), env
 
 
 class Var(Expr):
@@ -131,4 +133,20 @@ class Var(Expr):
         return f'{self.name}'
 
     def reduce(self, env: dict):
-        return env.get(self.name)
+        return env.get(self.name), env
+
+
+class Nothing(Expr):
+
+    def __str__(self):
+        return 'None'
+
+    def __repr__(self):
+        return 'None'
+
+    @property
+    def is_reducible(self) -> bool:
+        return false
+
+    def __eq__(self, other):
+        return type(self) is type(other)
