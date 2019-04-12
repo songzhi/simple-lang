@@ -7,7 +7,7 @@ class VirtualMachine:
         self.env = env
 
     def step(self):
-        self.expr, self.env = self.expr.reduce(env=self.env)
+        self.expr, self.env = self.expr.reduce(self.env)
 
     def run(self):
         while self.expr.is_reducible:

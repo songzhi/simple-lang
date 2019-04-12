@@ -122,18 +122,29 @@ class GreaterThan(BinOpExpr):
         return Bool(x > y), env
 
 
+class Assign(BinOpExpr):
+    op = '='
+    @staticmethod
+    def reduce_operation(name, value, env):
+        return Nothing(), {**env, name: value}
+
+
 class Var(Expr):
     def __init__(self, name):
-        self.name = name
+        self.value = name
 
     def __repr__(self):
-        return f'{type(self).__name__}({self.name})'
+        return f'{type(self).__name__}({self.value})'
 
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.value}'
 
     def reduce(self, env: dict):
-        return env.get(self.name), env
+        return env.get(self.value), env
+    
+    @property
+    def is_reducible(self) -> bool:
+        return False
 
 
 class Nothing(Expr):
@@ -146,7 +157,7 @@ class Nothing(Expr):
 
     @property
     def is_reducible(self) -> bool:
-        return false
+        return False
 
     def __eq__(self, other):
         return type(self) is type(other)
