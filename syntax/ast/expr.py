@@ -1,4 +1,3 @@
-from copy import deepcopy
 class Expr:
     @property
     def is_reducible(self) -> bool:
@@ -67,11 +66,6 @@ class ConstExpr(Expr):
 
 class Num(ConstExpr):
     pass
-
-
-class Int(ConstExpr):
-    pass
-
 
 class Str(ConstExpr):
     pass
