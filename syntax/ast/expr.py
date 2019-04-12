@@ -4,7 +4,7 @@ class Expr:
         return True
 
     def reduce(self):
-        pass
+        return self
 
 
 class BinOpExpr(Expr):
@@ -15,10 +15,22 @@ class BinOpExpr(Expr):
         self.right = right
 
     def __repr__(self):
-        return f'{self.__class__.__name__}({self.value})'
+        return f'{type(self).__name__}({self.value})'
 
     def __str__(self):
         return f'{self.left} {self.op} {self.right}'
+
+    @staticmethod
+    def reduce_operation(x, y):
+        pass
+
+    def reduce(self) -> Expr:
+        if self.left.is_reducible:
+            return type(self)(self.left.reduce(), self.right)
+        elif self.right.is_reducible:
+            return type(self)(self.left, self.right.reduce())
+        else:
+            return self.reduce_operation(self.left.value, self.right.value)
 
 
 class UnaryOpExpr(Expr):
@@ -26,7 +38,7 @@ class UnaryOpExpr(Expr):
         self.expr = expr
 
     def __repr__(self):
-        return f'{self.__class__.__name__}({self.expr})'
+        return f'{type(self).__name__}({self.expr})'
 
     def __str__(self):
         return f'{self.op} {self.expr}'
@@ -47,7 +59,7 @@ class ConstExpr(Expr):
         return False
 
 
-class Number(ConstExpr):
+class Num(ConstExpr):
     pass
 
 
@@ -55,7 +67,7 @@ class Int(ConstExpr):
     pass
 
 
-class String(ConstExpr):
+class Str(ConstExpr):
     pass
 
 
@@ -66,30 +78,43 @@ class Bool(ConstExpr):
 class Add(BinOpExpr):
     op = '+'
 
-    def __init__(self, left: Expr, right: Expr):
-        self.left = left
-        self.right = right
-
-    def reduce(self) -> Expr:
-        if self.left.is_reducible:
-            return Add(self.left.reduce(), self.right)
-        elif self.right.is_reducible:
-            return Add(self.left, self.right.reduce())
-        else:
-            return Number(self.left.value+self.right.value)
+    @staticmethod
+    def reduce_operation(x, y):
+        return Num(x+y)
 
 
-class Multiply(BinOpExpr):
+class Sub(BinOpExpr):
+    op = '-'
+
+    @staticmethod
+    def reduce_operation(x, y):
+        return Num(x-y)
+
+
+class Mul(BinOpExpr):
     op = '*'
 
-    def __init__(self, left: Expr, right: Expr):
-        self.left = left
-        self.right = right
+    @staticmethod
+    def reduce_operation(x, y):
+        return Num(x*y)
 
-    def reduce(self) -> Expr:
-        if self.left.is_reducible:
-            return Add(self.left.reduce(), self.right)
-        elif self.right.is_reducible:
-            return Add(self.left, self.right.reduce())
-        else:
-            return Number(self.left.value*self.right.value)
+
+class Div(BinOpExpr):
+    op = '/'
+    @staticmethod
+    def reduce_operation(x, y):
+        return Num(x/y)
+
+
+class LessThan(BinOpExpr):
+    op = '<'
+    @staticmethod
+    def reduce_operation(x, y):
+        return Bool(x < y)
+
+
+class GreaterThan(BinOpExpr):
+    op = '>'
+    @staticmethod
+    def reduce_operation(x, y):
+        return Bool(x > y)
