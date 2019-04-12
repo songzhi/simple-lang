@@ -7,12 +7,37 @@ class Expr:
         pass
 
 
+class BinOpExpr(Expr):
+    op = None
+
+    def __init__(self, left: Expr, right: Expr):
+        self.left = left
+        self.right = right
+
+    def __repr__(self):
+        return f'{self.__class__.__name__}({self.value})'
+
+    def __str__(self):
+        return f'{self.left} {self.op} {self.right}'
+
+
+class UnaryOpExpr(Expr):
+    def __init__(self, expr: Expr):
+        self.expr = expr
+
+    def __repr__(self):
+        return f'{self.__class__.__name__}({self.expr})'
+
+    def __str__(self):
+        return f'{self.op} {self.expr}'
+
+
 class Number(Expr):
     def __init__(self, value: float):
         self.value = value
 
     def __repr__(self):
-        return f'Number({self.value})'
+        return f'{self.__class__.__name__}({self.value})'
 
     def __str__(self):
         return f'{self.value}'
@@ -22,16 +47,12 @@ class Number(Expr):
         return False
 
 
-class Add(Expr):
+class Add(BinOpExpr):
+    op = '+'
+
     def __init__(self, left: Expr, right: Expr):
         self.left = left
         self.right = right
-
-    def __repr__(self):
-        return f'Add({self.left, self.right})'
-
-    def __str__(self):
-        return f'{self.left} + {self.right}'
 
     def reduce(self) -> Expr:
         if self.left.is_reducible:
@@ -42,16 +63,12 @@ class Add(Expr):
             return Number(self.left.value+self.right.value)
 
 
-class Multiply(Expr):
+class Multiply(BinOpExpr):
+    op = '*'
+
     def __init__(self, left: Expr, right: Expr):
         self.left = left
         self.right = right
-
-    def __repr__(self):
-        return f'Multiply({self.left, self.right})'
-
-    def __str__(self):
-        return f'{self.left} * {self.right}'
 
     def reduce(self) -> Expr:
         if self.left.is_reducible:
