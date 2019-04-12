@@ -135,6 +135,7 @@ class Assign(BinOpExpr):
         else:
             return self.reduce_operation(self.left.value, self.right.value, env)
 
+
 class Var(Expr):
     def __init__(self, name):
         self.value = name
@@ -147,7 +148,6 @@ class Var(Expr):
 
     def reduce(self, env: dict):
         return env.get(self.value), env
-
 
 
 class Nothing(Expr):
@@ -186,3 +186,19 @@ class If(Expr):
             return self.consequence, env
         else:
             return self.alternative, env
+
+
+class Seq(Expr):
+    def __init__(self, first: Expr, second):
+        self.first = first
+        self.second = second
+
+    def __str__(self):
+        return f'{self.first}; {self.second}'
+
+    def reduce(self, env: dict):
+        if self.first == Nothing():
+            return self.second, env
+        else:
+            first, env = self.first.reduce(env)
+            return type(self)(first, self.second), env
