@@ -2,8 +2,10 @@ from syntax.ast import *
 from vm import VirtualMachine
 
 if __name__ == "__main__":
-    expr = Seq(Assign(Var('y'), Int(1)), Assign(Var('y'), Int(2)))
-    env = {'x': Bool(True)}
+    expr = While(LessThan(Var('x'), Num(5)),
+                 Assign(Var('x'), Mul(Var('x'), Num(3)))
+                 )
+    env = {'x': Num(1)}
     vm = VirtualMachine(expr, env)
 
     vm.run()

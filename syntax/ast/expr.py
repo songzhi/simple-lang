@@ -1,3 +1,4 @@
+from copy import deepcopy
 class Expr:
     @property
     def is_reducible(self) -> bool:
@@ -133,7 +134,7 @@ class Assign(BinOpExpr):
             right, env = self.right.reduce(env)
             return type(self)(self.left, right), env
         else:
-            return self.reduce_operation(self.left.value, self.right.value, env)
+            return self.reduce_operation(self.left.value, self.right, env)
 
 
 class Var(Expr):
@@ -188,8 +189,23 @@ class If(Expr):
             return self.alternative, env
 
 
+class While(Expr):
+    def __init__(self, condition: Expr, body: Expr):
+        self.condition = condition
+        self.body = body
+
+    def __str__(self):
+        return f'while ({self.condition}) {{ {self.body} }} '
+
+    def __repr__(self):
+        return f'While({self.condition}, {self.body})'
+
+    def reduce(self, env: dict):
+        return If(self.condition, Seq(self.body, self), Nothing()), env
+
+
 class Seq(Expr):
-    def __init__(self, first: Expr, second):
+    def __init__(self, first: Expr, second: Expr):
         self.first = first
         self.second = second
 
