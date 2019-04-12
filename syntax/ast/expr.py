@@ -1,5 +1,10 @@
 class Expr:
-    pass
+    @property
+    def is_reducible(self) -> bool:
+        return True
+
+    def reduce(self):
+        pass
 
 
 class Number(Expr):
@@ -11,6 +16,10 @@ class Number(Expr):
 
     def __str__(self):
         return f'{self.value}'
+
+    @property
+    def is_reducible(self) -> bool:
+        return False
 
 
 class Add(Expr):
@@ -24,6 +33,15 @@ class Add(Expr):
     def __str__(self):
         return f'{self.left} + {self.right}'
 
+    def reduce(self) -> Expr:
+        if self.left.is_reducible:
+            return Add(self.left.reduce(), self.right)
+        elif self.right.is_reducible:
+            return Add(self.left, self.right.reduce())
+        else:
+            return Number(self.left.value+self.right.value)
+
+
 class Multiply(Expr):
     def __init__(self, left: Expr, right: Expr):
         self.left = left
@@ -34,3 +52,11 @@ class Multiply(Expr):
 
     def __str__(self):
         return f'{self.left} * {self.right}'
+
+    def reduce(self) -> Expr:
+        if self.left.is_reducible:
+            return Add(self.left.reduce(), self.right)
+        elif self.right.is_reducible:
+            return Add(self.left, self.right.reduce())
+        else:
+            return Number(self.left.value*self.right.value)
