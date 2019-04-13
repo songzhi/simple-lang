@@ -34,6 +34,7 @@ class Bool(ConstExpr):
     def to_js(self):
         return f'env => {self.value.lower()}'
 
+
 class Var(Expr):
     def __init__(self, name):
         self.value = name
@@ -59,7 +60,7 @@ class BinOpExpr(Expr):
         self.right = right
 
     def __repr__(self):
-        return f'{type(self).__name__}({self.value})'
+        return f'{type(self).__name__}({repr(self.left)}, {repr(self.right)})'
 
     def __str__(self):
         return f'{self.left} {self.op} {self.right}'
@@ -140,6 +141,19 @@ class Assign(BinOpExpr):
 
     def to_js(self):
         return f'env => env["{self.left.value}"] = ({self.right.to_js()})(env)'
+
+
+BINOPEXPR_MAP = {
+    '+': Add,
+    '-': Sub,
+    '*': Mul,
+    '/': Div,
+    '<': LessThan,
+    '>': GreaterThan,
+    '==': Eq,
+    '&&': BoolAnd,
+    '||': BoolOr
+}
 
 
 class Nothing(Expr):
