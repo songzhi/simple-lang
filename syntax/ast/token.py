@@ -18,10 +18,16 @@ class BoolLiteral(TokenData):
     def __str__(self):
         return f'{self.value}'
 
+    def __repr__(self):
+        return f'{type(self).__name__}({self.value})'
+
 
 class EOF(TokenData):
     def __str__(self):
         return f'end of file'
+
+    def __repr__(self):
+        return f'{type(self).__name__}()'
 
 
 class Identifier(TokenData):
@@ -31,6 +37,9 @@ class Identifier(TokenData):
     def __str__(self):
         return f'{self.value}'
 
+    def __repr__(self):
+        return f'{type(self).__name__}({self.value})'
+
 
 class Keyword(TokenData):
     def __init__(self, value):
@@ -39,10 +48,16 @@ class Keyword(TokenData):
     def __str__(self):
         return f'{self.value}'
 
+    def __repr__(self):
+        return f'{type(self).__name__}({self.value})'
+
 
 class NoneLiteral(TokenData):
     def __str__(self):
         return f'None'
+
+    def __repr__(self):
+        return f'{type(self).__name__}()'
 
 
 class Punctuator(TokenData):
@@ -53,6 +68,9 @@ class Punctuator(TokenData):
     def __str__(self):
         return f'{self.value}'
 
+    def __repr__(self):
+        return f'{type(self).__name__}({self.value})'
+
 
 class StringLiteral(TokenData):
     def __init__(self, value):
@@ -60,6 +78,9 @@ class StringLiteral(TokenData):
 
     def __str__(self):
         return f'{self.value}'
+
+    def __repr__(self):
+        return f'{type(self).__name__}({self.value})'
 
 
 class Comment(TokenData):
@@ -69,6 +90,9 @@ class Comment(TokenData):
     def __str__(self):
         return f'{self.value}'
 
+    def __repr__(self):
+        return f'{type(self).__name__}({self.value})'
+
 
 class NumericLiteral(TokenData):
     def __init__(self, value: float):
@@ -76,6 +100,9 @@ class NumericLiteral(TokenData):
 
     def __str__(self):
         return f'{self.value}'
+
+    def __repr__(self):
+        return f'{type(self).__name__}({self.value})'
 
 
 class Token:
@@ -86,3 +113,6 @@ class Token:
 
     def __str__(self):
         return f'{self.data}'
+
+    def __repr__(self):
+        return f'Token({repr(self.data)})'

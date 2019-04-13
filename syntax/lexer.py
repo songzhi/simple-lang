@@ -125,6 +125,7 @@ class Lexer:
                 while True:
                     ch = self.preview_next()
                     if ch == '.' or ch.isdigit():
+                        self.next()
                         buf.append(ch)
                     else:
                         break
