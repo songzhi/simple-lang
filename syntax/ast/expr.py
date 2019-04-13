@@ -2,6 +2,9 @@ class Expr:
     def eval(self, env: dict):
         return self
 
+    def to_js(self):
+        pass
+
 
 class ConstExpr(Expr):
     def __init__(self, value):
@@ -15,6 +18,9 @@ class ConstExpr(Expr):
 
     def __eq__(self, other):
         return type(self) is type(other) and self.value == other.value
+
+    def to_js(self):
+        return f'env => {self.value}'
 
 
 class Num(ConstExpr):
@@ -39,6 +45,9 @@ class Var(Expr):
     def eval(self, env: dict):
         return env.get(self.value)
 
+    def to_js(self):
+        return f'env => env["{self.value}"]'
+
 
 class BinOpExpr(Expr):
     op = None
@@ -52,6 +61,9 @@ class BinOpExpr(Expr):
 
     def __str__(self):
         return f'{self.left} {self.op} {self.right}'
+
+    def to_js(self):
+        return f'env => ({self.left.to_js()})(env) {self.op} ({self.right.to_js()})(env)'
 
 
 class Add(BinOpExpr):
