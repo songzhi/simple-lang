@@ -93,3 +93,56 @@ class GreaterThan(BinOpExpr):
 
     def eval(self, env: dict):
         Bool(self.left.eval().value > self.right.eval().value)
+
+
+class Assign(BinOpExpr):
+    op = '='
+
+    def eval(self, env: dict):
+        env[self.left.value] = self.right.eval(env)
+        return env
+
+
+class Nothing(Expr):
+    def __str__(self):
+        return 'None'
+
+    def __repr__(self):
+        return 'None'
+
+    def __eq__(self, other):
+        return type(self) is type(other)
+
+    def eval(self, env: dict):
+        return env
+
+
+class If(Expr):
+    def __init__(self, condition: Expr, consequence: Expr, alternative: Expr):
+        self.condition = condition
+        self.consequence = consequence
+        self.alternative = alternative
+
+    def __str__(self):
+        return f'if ({self.condition}) {{ {self.consequence} }} else {{ {self.alternative} }}'
+
+    def __repr__(self):
+        return f'If({self.condition}, {self.consequence}, {self.alternative})'
+
+    def eval(self, env: dict):
+        if self.condition.eval() == Bool(True):
+            return self.consequence.eval(env)
+        else:
+            return self.alternative.eval(env)
+
+
+class Seq(Expr):
+    def __init__(self, first: Expr, second: Expr):
+        self.first = first
+        self.second = second
+
+    def __str__(self):
+        return f'{self.first}; {self.second}'
+
+    def eval(self, env: dict):
+        return self.second.eval(self.first.eval(env))
