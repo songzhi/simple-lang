@@ -31,6 +31,8 @@ class Bool(ConstExpr):
     def __bool__(self):
         return self.value
 
+    def to_js(self):
+        return f'env => {self.value.lower()}'
 
 class Var(Expr):
     def __init__(self, name):
