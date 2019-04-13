@@ -115,6 +115,9 @@ class Assign(BinOpExpr):
         env[self.left.value] = self.right.eval(env)
         return env
 
+    def to_js(self):
+        return f'env => env["{self.left.value}"] = ({self.right.to_js()})(env)'
+
 
 class Nothing(Expr):
     def __str__(self):
@@ -128,6 +131,9 @@ class Nothing(Expr):
 
     def eval(self, env: dict):
         return env
+
+    def to_js(self):
+        return f'env => env'
 
 
 class If(Expr):
@@ -148,6 +154,15 @@ class If(Expr):
         else:
             return self.alternative.eval(env)
 
+    def to_js(self):
+        return f'''env => {{
+  if (({self.condition.to_js()})(env)) {{
+      ({self.consequence.to_js()})(env)
+  }} else {{
+      ({self.alternative.to_js()})(env)
+  }}
+}}'''
+
 
 class Seq(Expr):
     def __init__(self, first: Expr, second: Expr):
@@ -159,6 +174,9 @@ class Seq(Expr):
 
     def eval(self, env: dict):
         return self.second.eval(self.first.eval(env))
+
+    def to_js(self):
+        return f'env => ({self.second.to_js()})(({self.first.to_js()})(env))'
 
 
 class While(Expr):
@@ -176,3 +194,16 @@ class While(Expr):
         while self.condition.eval(env):
             self.body.eval(env)
         return env
+
+    def to_js(self):
+        return f'''env => {{
+  while (({self.condition.to_js()})(env)) {{
+      ({self.body.to_js()})(env);
+  }}
+}}'''
+
+
+statement = While(LessThan(Var('x'), Num(5)),
+                  Assign(Var('x'), Mul(Var('x'), Num(3))))
+
+print(statement.to_js())
