@@ -21,6 +21,9 @@ class BoolLiteral(TokenData):
     def __repr__(self):
         return f'{type(self).__name__}({self.value})'
 
+    def __eq__(self, other):
+        return type(self) is type(other) and self.value == other.value
+
 
 class EOF(TokenData):
     def __str__(self):
@@ -28,6 +31,9 @@ class EOF(TokenData):
 
     def __repr__(self):
         return f'{type(self).__name__}()'
+
+    def __eq__(self, other):
+        return type(self) is type(other)
 
 
 class Identifier(TokenData):
@@ -40,6 +46,9 @@ class Identifier(TokenData):
     def __repr__(self):
         return f'{type(self).__name__}({self.value})'
 
+    def __eq__(self, other):
+        return type(self) is type(other) and self.value == other.value
+
 
 class Keyword(TokenData):
     def __init__(self, value):
@@ -51,6 +60,9 @@ class Keyword(TokenData):
     def __repr__(self):
         return f'{type(self).__name__}({self.value})'
 
+    def __eq__(self, other):
+        return type(self) is type(other) and self.value == other.value
+
 
 class NoneLiteral(TokenData):
     def __str__(self):
@@ -58,6 +70,9 @@ class NoneLiteral(TokenData):
 
     def __repr__(self):
         return f'{type(self).__name__}()'
+
+    def __eq__(self, other):
+        return type(self) is type(other)
 
 
 class Punctuator(TokenData):
@@ -71,6 +86,9 @@ class Punctuator(TokenData):
     def __repr__(self):
         return f'{type(self).__name__}({self.value})'
 
+    def __eq__(self, other):
+        return type(self) is type(other) and self.value == other.value
+
 
 class StringLiteral(TokenData):
     def __init__(self, value):
@@ -81,6 +99,9 @@ class StringLiteral(TokenData):
 
     def __repr__(self):
         return f'{type(self).__name__}({self.value})'
+
+    def __eq__(self, other):
+        return type(self) is type(other) and self.value == other.value
 
 
 class Comment(TokenData):
@@ -93,6 +114,9 @@ class Comment(TokenData):
     def __repr__(self):
         return f'{type(self).__name__}({self.value})'
 
+    def __eq__(self, other):
+        return type(self) is type(other) and self.value == other.value
+
 
 class NumericLiteral(TokenData):
     def __init__(self, value: float):
@@ -103,6 +127,9 @@ class NumericLiteral(TokenData):
 
     def __repr__(self):
         return f'{type(self).__name__}({self.value})'
+
+    def __eq__(self, other):
+        return type(self) is type(other) and self.value == other.value
 
 
 class Token:
