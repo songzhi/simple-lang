@@ -22,7 +22,8 @@ class Num(ConstExpr):
 
 
 class Bool(ConstExpr):
-    pass
+    def __bool__(self):
+        return self.value
 
 
 class Var(Expr):
@@ -57,42 +58,42 @@ class Add(BinOpExpr):
     op = '+'
 
     def eval(self, env: dict):
-        Num(self.left.eval().value+self.right.eval().value)
+        return Num(self.left.eval(env).value+self.right.eval(env).value)
 
 
 class Sub(BinOpExpr):
     op = '-'
 
     def eval(self, env: dict):
-        Num(self.left.eval().value-self.right.eval().value)
+        return Num(self.left.eval(env).value-self.right.eval(env).value)
 
 
 class Mul(BinOpExpr):
     op = '*'
 
     def eval(self, env: dict):
-        Num(self.left.eval().value*self.right.eval().value)
+        return Num(self.left.eval(env).value*self.right.eval(env).value)
 
 
 class Div(BinOpExpr):
     op = '/'
 
     def eval(self, env: dict):
-        Num(self.left.eval().value/self.right.eval().value)
+        return Num(self.left.eval(env).value/self.right.eval(env).value)
 
 
 class LessThan(BinOpExpr):
     op = '<'
 
     def eval(self, env: dict):
-        Bool(self.left.eval().value < self.right.eval().value)
+        return Bool(self.left.eval(env).value < self.right.eval(env).value)
 
 
 class GreaterThan(BinOpExpr):
     op = '>'
 
     def eval(self, env: dict):
-        Bool(self.left.eval().value > self.right.eval().value)
+        return Bool(self.left.eval(env).value > self.right.eval(env).value)
 
 
 class Assign(BinOpExpr):
@@ -130,7 +131,7 @@ class If(Expr):
         return f'If({self.condition}, {self.consequence}, {self.alternative})'
 
     def eval(self, env: dict):
-        if self.condition.eval() == Bool(True):
+        if self.condition.eval(env):
             return self.consequence.eval(env)
         else:
             return self.alternative.eval(env)
