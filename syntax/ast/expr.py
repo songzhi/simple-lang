@@ -147,3 +147,20 @@ class Seq(Expr):
 
     def eval(self, env: dict):
         return self.second.eval(self.first.eval(env))
+
+
+class While(Expr):
+    def __init__(self, condition: Expr, body: Expr):
+        self.condition = condition
+        self.body = body
+
+    def __str__(self):
+        return f'while ({self.condition}) {{ {self.body} }} '
+
+    def __repr__(self):
+        return f'While({self.condition}, {self.body})'
+
+    def eval(self, env: dict):
+        while self.condition.eval(env):
+            self.body.eval(env)
+        return env
