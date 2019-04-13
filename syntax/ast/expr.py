@@ -117,14 +117,14 @@ class Eq(BinOpExpr):
         return Bool(self.left.eval(env).value == self.right.eval(env).value)
 
 
-class And(BinOpExpr):
+class BoolAnd(BinOpExpr):
     op = '&&'
 
     def eval(self, env: dict):
         return Bool(self.left.eval(env).value and self.right.eval(env).value)
 
 
-class Or(BinOpExpr):
+class BoolOr(BinOpExpr):
     op = '||'
 
     def eval(self, env: dict):

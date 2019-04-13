@@ -6,6 +6,7 @@ while
 None
 '''.split())
 
+
 class TokenData:
     pass
 
@@ -63,6 +64,14 @@ class StringLiteral(TokenData):
 
 class Comment(TokenData):
     def __init__(self, value):
+        self.value = value
+
+    def __str__(self):
+        return f'{self.value}'
+
+
+class NumericLiteral(TokenData):
+    def __init__(self, value: float):
         self.value = value
 
     def __str__(self):
