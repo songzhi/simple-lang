@@ -108,6 +108,27 @@ class GreaterThan(BinOpExpr):
         return Bool(self.left.eval(env).value > self.right.eval(env).value)
 
 
+class Eq(BinOpExpr):
+    op = '=='
+
+    def eval(self, env: dict):
+        return Bool(self.left.eval(env).value == self.right.eval(env).value)
+
+
+class And(BinOpExpr):
+    op = '&&'
+
+    def eval(self, env: dict):
+        return Bool(self.left.eval(env).value and self.right.eval(env).value)
+
+
+class Or(BinOpExpr):
+    op = '||'
+
+    def eval(self, env: dict):
+        return Bool(self.left.eval(env).value or self.right.eval(env).value)
+
+
 class Assign(BinOpExpr):
     op = '='
 
