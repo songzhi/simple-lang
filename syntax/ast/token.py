@@ -44,7 +44,7 @@ class Identifier(TokenData):
         return f'{self.value}'
 
     def __repr__(self):
-        return f'{type(self).__name__}({self.value})'
+        return f"{type(self).__name__}('{self.value}')"
 
     def __eq__(self, other):
         return type(self) is type(other) and self.value == other.value
@@ -58,7 +58,7 @@ class Keyword(TokenData):
         return f'{self.value}'
 
     def __repr__(self):
-        return f'{type(self).__name__}({self.value})'
+        return f"{type(self).__name__}('{self.value}')"
 
     def __eq__(self, other):
         return type(self) is type(other) and self.value == other.value
@@ -84,7 +84,7 @@ class Punctuator(TokenData):
         return f'{self.value}'
 
     def __repr__(self):
-        return f'{type(self).__name__}({self.value})'
+        return f"{type(self).__name__}('{self.value}')"
 
     def __eq__(self, other):
         return type(self) is type(other) and self.value == other.value
@@ -98,7 +98,7 @@ class StringLiteral(TokenData):
         return f'{self.value}'
 
     def __repr__(self):
-        return f'{type(self).__name__}({self.value})'
+        return f"{type(self).__name__}('{self.value}')"
 
     def __eq__(self, other):
         return type(self) is type(other) and self.value == other.value
@@ -112,7 +112,7 @@ class Comment(TokenData):
         return f'{self.value}'
 
     def __repr__(self):
-        return f'{type(self).__name__}({self.value})'
+        return f"{type(self).__name__}('{self.value}')"
 
     def __eq__(self, other):
         return type(self) is type(other) and self.value == other.value
